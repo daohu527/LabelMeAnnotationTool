@@ -105,6 +105,36 @@ function ShowNextImage() {
   }
 }
 
+function autoLabelByModel() {
+  console.log("autoLabel start.");
+  // wait to auto label ended.
+  document.getElementById('waiting').style.visibility = 'visible';
+
+  // start label by model.
+  cocoSsd.load().then(model => {
+    // detect objects in the image.
+    model.detect(main_media.image).then(predictions => {
+      // save annotations to XML
+      main_handler.saveAnnotations(predictions);
+      
+      console.log("autoLabel end");
+      // auto label ended.
+      document.getElementById('waiting').style.visibility = 'hidden';
+
+      DrawAnnotations();
+    });
+  });
+}
+
+
+// auto label the image by model
+function AutoLabelImage() {
+  console.log("isFirstLabel: "+isFirstLabel);
+  if (isFirstLabel) {
+    autoLabelByModel();
+  }
+}
+
 function InsertServerLogData(modifiedControlPoints) {
   var old_pri = LM_xml.getElementsByTagName("private");
   for(ii=0;ii<old_pri.length;ii++) {

@@ -218,6 +218,92 @@ function handler() {
         if(IsNearPolygon(x,y,pp)) selectObject(pp);
         else unselectObjects();
     };
+
+    // change bbox to coordinate
+    function bboxToCoor(bbox) {
+      let x = bbox[0];
+      let y = bbox[1];
+      let width = bbox[2];
+      let height = bbox[3];
+
+      var coorX = new Array();
+      var coorY = new Array();
+      coorX.push(x);
+      coorX.push(x+w);
+      coorX.push(x);
+      coorX.push(x+w);
+
+      coorY.push(y);
+      coorY.push(y);
+      coorY.push(y+h);
+      coorY.push(y+h);
+    }
+
+    this.saveAnnotations = function (arr) {
+      for(let i = 0; i < arr.length; i++) {
+        this.genAnnoXML(arr[i]);
+      }
+      // Write XML to server:
+      console.log("SubmitXmlUrl: " + SubmitXmlUrl);
+      WriteXML(SubmitXmlUrl,LM_xml,function(){return;});
+    }
+
+    this.genAnnoXML = function (bbox) {
+      // the tag name
+      let new_name = bbox["class"];
+
+      // Insert data into XML:
+      var html_str = '<object>';
+      html_str += '<name>' + new_name + '</name>';
+      html_str += '<deleted>0</deleted>';
+      html_str += '<verified>0</verified>';
+      // if(use_attributes) {
+      //   html_str += '<occluded>' + new_occluded + '</occluded>';
+      //   html_str += '<attributes>' + new_attributes + '</attributes>';
+      // }
+      html_str += '<parts><hasparts></hasparts><ispartof></ispartof></parts>';
+      var ts = GetTimeStamp();
+      if(ts.length==20) html_str += '<date>' + ts + '</date>';
+      // html_str += '<id>' + anno.anno_id + '</id>';
+      html_str += '<id>' + '0' + '</id>';
+      if (bounding_box){
+        html_str += '<type>'
+        html_str += 'bounding_box';
+        html_str += '</type>'
+      }
+            
+      html_str += '<polygon>';
+      html_str += '<username>' + username + '</username>';
+
+      let box = bbox["bbox"];
+      let x = box[0];
+      let y = box[1];
+      let width = box[2];
+      let height = box[3];
+
+      var coorX = new Array();
+      var coorY = new Array();
+      coorX.push(x);
+      coorX.push(x+width);
+      coorX.push(x+width);
+      coorX.push(x);
+
+      coorY.push(y);
+      coorY.push(y);
+      coorY.push(y+height);
+      coorY.push(y+height);
+
+      for(let jj=0; jj < coorX.length; jj++) {
+        html_str += '<pt>';
+        html_str += '<x>' + coorX[jj] + '</x>';
+        html_str += '<y>' + coorY[jj] + '</y>';
+        html_str += '</pt>';
+      }
+      html_str += '</polygon>';
+      html_str += '</object>';
+      $(LM_xml).children("annotation").append($(html_str));
+    }
+    
     
     // Submits the object label in response to the "What is this object?"
     // popup bubble. THIS FUNCTION IS A MESS!!!!
