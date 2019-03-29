@@ -28,6 +28,7 @@ COPY apache2.conf /etc/apache2/apache2.conf
 
 #Clone LabelMe,move it and make
 RUN git clone https://github.com/CSAILVision/LabelMeAnnotationTool.git
+RUN copy ./LabelMeAnnotationTool/index.html  /var/www/html/
 RUN mv ./LabelMeAnnotationTool/ /var/www/html/LabelMeAnnotationTool/
 RUN cd /var/www/html/LabelMeAnnotationTool/ && make
 RUN chown -R www-data:www-data /var/www/html
