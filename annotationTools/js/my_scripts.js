@@ -111,7 +111,7 @@ function autoLabelByModel() {
   document.getElementById('waiting').style.visibility = 'visible';
 
   // start label by model.
-  cocoSsd.load().then(model => {
+  cocoSsd.load("mobilenet_v2").then(model => {
     // detect objects in the image.
     model.detect(main_media.image).then(predictions => {
       // save annotations to XML
@@ -123,6 +123,8 @@ function autoLabelByModel() {
 
       DrawAnnotations();
     });
+  }).catch(()=> {
+    document.getElementById('waiting').style.visibility = 'hidden';
   });
 }
 
