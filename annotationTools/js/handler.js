@@ -266,11 +266,11 @@ function handler() {
       if(ts.length==20) html_str += '<date>' + ts + '</date>';
       // html_str += '<id>' + anno.anno_id + '</id>';
       html_str += '<id>' + '0' + '</id>';
-      if (bounding_box){
-        html_str += '<type>'
-        html_str += 'bounding_box';
-        html_str += '</type>'
-      }
+      
+      html_str += '<type>'
+      html_str += 'bounding_box';
+      html_str += '</type>'
+      
             
       html_str += '<polygon>';
       html_str += '<username>' + username + '</username>';
