@@ -105,36 +105,43 @@ function ShowNextImage() {
   }
 }
 
-function autoLabelByModel() {
-  console.log("autoLabel start.");
-  // wait to auto label ended.
+// Auto label the image by tensorflow.js "coco-ssd" model.
+function AutoLabelImage() {
+  if (isFirstLabel) {
+    autoLabelByModel();
+  } else {
+    alert("The image has been automatically labeled!");
+  }
+}
+
+function showProgress() {
   document.getElementById('waiting').style.visibility = 'visible';
+}
 
-  // start label by model.
+function endProgress() {
+  document.getElementById('waiting').style.visibility = 'hidden';
+}
+
+function autoLabelByModel() {
+  console.log("AutoLabel start.");
+  // Wait to auto label ended.
+  showProgress();
+
+  // Start label by model.
   cocoSsd.load("mobilenet_v2").then(model => {
-    // detect objects in the image.
+    // Detect objects in the image.
     model.detect(main_media.image).then(predictions => {
-      // save annotations to XML
+      // Save annotations to the XML file.
       main_handler.saveAnnotations(predictions);
-      
       console.log("autoLabel end");
-      // auto label ended.
-      document.getElementById('waiting').style.visibility = 'hidden';
-
+      // Auto label ended.
+      endProgress();
+      // Draw rectangular frames
       DrawAnnotations();
     });
   }).catch(()=> {
-    document.getElementById('waiting').style.visibility = 'hidden';
+    endProgress();
   });
-}
-
-
-// auto label the image by model
-function AutoLabelImage() {
-  console.log("isFirstLabel: "+isFirstLabel);
-  if (isFirstLabel) {
-    autoLabelByModel();
-  }
 }
 
 function InsertServerLogData(modifiedControlPoints) {

@@ -74,12 +74,12 @@ function StartupLabelMe() {
   }
 }
 function DrawAnnotations() {
-  // wait 100ms, the xml file need time to write to disks.
+  // Wait 100ms, wait the xml file write to the disk.
   var seconds = 0.1;
   var waitTill = new Date(new Date().getTime() + seconds * 1000);
   while(waitTill > new Date()){};
   
-  // Read the XML annotation file:
+  // Read the XML annotation file.
   var anno_file = main_media.GetFileInfo().GetFullName();
   anno_file = 'Annotations/' + anno_file.substr(0,anno_file.length-4) + '.xml' + '?' + Math.random();
   ReadXML(anno_file,LoadAnnotationSuccess,LoadAnnotation404);
